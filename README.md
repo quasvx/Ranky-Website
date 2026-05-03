@@ -12,7 +12,7 @@ Este proyecto es el núcleo central diseñado para la gestión de aplicaciones d
 ### ✨ CARACTERÍSTICAS PRINCIPALES
  Transparencia Total
 Código Abierto: El frontend es público para que cualquiera pueda auditar su funcionamiento.
-Seguridad de Datos: La **Ranky Core API** reside en un servidor privado e independiente para proteger las integraciones con Discord y las bases de datos.
+Seguridad de Datos: La **Ranky API** reside en un servidor privado e independiente para proteger las integraciones con Discord y las bases de datos.
 
 ⚙️ Funcionalidades del Sistema
 Hub de Identidad: Sistema de verificación de identidad integrado en el index.
@@ -31,7 +31,7 @@ This project serves as the central hub for staff applications, custom tools, and
 ### ✨ KEY FEATURES
  Total Transparency
 Open Source: The frontend is public, allowing anyone to audit its performance and logic.
-Data Security: The **Ranky Core API** is hosted on a separate private server to protect Discord integrations and database integrity.
+Data Security: The **Ranky API** is hosted on a separate private server to protect Discord integrations and database integrity.
 
 ⚙️ System Functionalities
 Identity Hub: Built-in identity verification system on the index page.
