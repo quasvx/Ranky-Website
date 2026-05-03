@@ -58,4 +58,7 @@ https://chat.whatsapp.com/EolcRShcdq3BML1fKpFpOn
 If you are going to use parts of this code, please give proper credit.
 Si vas a utilizar partes de este código, por favor da los créditos correspondientes.
 
+Related with https://github.com/quasvx/Ranky-Website-Landing-Page
+Relacionado con https://github.com/quasvx/Ranky-Website-Landing-Page
+
 *Ranky System v4.9.4 | 2026*
