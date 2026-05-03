@@ -55,8 +55,8 @@ Join our Community! / ¡Únete a la comunidad! (Discord/WhatsApp)
 https://ranky.pages.dev/discord
 https://chat.whatsapp.com/EolcRShcdq3BML1fKpFpOn
 ---
-If you are going to use parts of this code, please give proper credit.
-Si vas a utilizar partes de este código, por favor da los créditos correspondientes.
+If you are going to use parts of this code or of the mod, please give proper credit.
+Si vas a utilizar partes de este código o del mod, por favor da los créditos correspondientes.
 
 Related with https://github.com/quasvx/Ranky-Website-Landing-Page
 
