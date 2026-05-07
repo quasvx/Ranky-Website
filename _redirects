@@ -1,5 +1,9 @@
-/api/submit https://ranky-api.pages.dev/api/api  302
-/rankythanks  /rankythanks  200
-/rankyqr  /rankyqr  200
-/form         /form     200
-/discord      /discord  200 
+# Redirigir ranky.pages.dev → ranky.us.ci conservando la ruta
+* https://ranky.us.ci/:splat 301
+
+# Tus reglas existentes
+/api/submit https://ranky-api.pages.dev/api/api 302
+/rankythanks /rankythanks 200
+/rankyqr /rankyqr 200
+/form /form 200
+/discord /discord 200
