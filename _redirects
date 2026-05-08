@@ -1,5 +1,3 @@
-# Redirigir ranky.pages.dev → ranky.us.ci conservando la ruta
-https://ranky.pages.dev/:splat https://ranky.us.ci/:splat 301
 
 # Tus reglas existentes
 /api/submit https://ranky-api.pages.dev/api/api 302
