@@ -4,107 +4,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Ranky Form | Staff Application</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://www.google.com https://www.gstatic.com; frame-src 'self' https://challenges.cloudflare.com https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://challenges.cloudflare.com https://ranky-api.pages.dev https://cdn.jsdelivr.net;">
+    <title>Ranky Form</title>
     <link rel="icon" href="/formulary.ico" type="image/x-icon">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --bg-body: #f1f5f9;
             --bg-card: #ffffff;
             --text-primary: #0f172a;
             --text-secondary: #334155;
+            --text-muted: #64748b;
             --border-light: #e2e8f0;
+            --border-focus: #3b82f6;
             --accent: #3b82f6;
-            --accent-hover: #2563eb;
+            --accent-soft: #dbeafe;
+            --hero-bg: #f8fafc;
+            --input-bg: #ffffff;
+            --placeholder: #94a3b8;
+            --shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
             --btn-bg: #1e293b;
             --btn-hover: #0f172a;
-            --error: #dc2626;
-            --success: #22c55e;
+            --captcha-bg: #f8fafc;
+            --sidebar-bg: rgba(255, 255, 255, 0.98);
+            --overlay: rgba(0, 0, 0, 0.25);
+            --transition: 0.2s ease;
         }
+
         body.dark {
             --bg-body: #0f172a;
             --bg-card: #1e293b;
             --text-primary: #f1f5f9;
             --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
             --border-light: #334155;
+            --border-focus: #60a5fa;
             --accent: #60a5fa;
-            --accent-hover: #3b82f6;
+            --accent-soft: #1e293b;
+            --hero-bg: #111827;
+            --input-bg: #0f172a;
+            --placeholder: #64748b;
+            --shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
             --btn-bg: #334155;
             --btn-hover: #475569;
+            --captcha-bg: #0f172a;
+            --sidebar-bg: rgba(30, 41, 59, 0.98);
+            --overlay: rgba(0, 0, 0, 0.5);
         }
+
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-body);
             color: var(--text-primary);
-            padding: 2rem 1rem;
-            transition: background 0.2s, color 0.2s;
             min-height: 100vh;
+            padding: 2rem 1rem;
+            transition: background var(--transition), color var(--transition);
         }
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(20px); }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
         .main-card {
             background: var(--bg-card);
             border-radius: 1.75rem;
-            max-width: 1000px;
-            margin: 0 auto;
+            box-shadow: var(--shadow);
             border: 1px solid var(--border-light);
-            animation: fadeSlide 0.5s ease;
             overflow: hidden;
+            animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+            transition: background var(--transition), border-color var(--transition);
         }
+
         .hero-section {
-            background: var(--bg-card);
-            padding: 2rem;
+            background: var(--hero-bg);
+            padding: 2rem 2rem;
             text-align: center;
             border-bottom: 1px solid var(--border-light);
         }
+
         .hero-section h1 {
             font-weight: 700;
             font-size: clamp(1.8rem, 5vw, 2.5rem);
             color: var(--text-primary);
+            letter-spacing: -0.3px;
         }
+
         .hero-section p {
-            color: var(--text-secondary);
+            color: var(--text-muted);
+            font-weight: 500;
             font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-top: 0.5rem;
         }
+
         .section-label {
             font-weight: 600;
             font-size: 1rem;
-            border-left: 3px solid var(--accent);
-            padding-left: 1rem;
-            margin: 2rem 0 1.5rem 0;
             color: var(--text-secondary);
+            border-left: 3px solid var(--accent);
+            padding-left: 0.9rem;
+            margin: 2rem 0 1.5rem 0;
         }
+
         .form-label {
             font-weight: 600;
             font-size: 0.85rem;
-            margin-bottom: 0.5rem;
-            display: block;
             color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
+
         .form-control, .form-select {
-            background: var(--bg-card);
+            background: var(--input-bg);
             border: 1.5px solid var(--border-light);
             border-radius: 1rem;
             padding: 0.75rem 1rem;
-            width: 100%;
-            color: var(--text-primary);
             font-size: 0.9rem;
-            transition: all 0.2s;
+            color: var(--text-primary);
+            transition: all var(--transition);
         }
+
         .form-control:focus, .form-select:focus {
-            border-color: var(--accent);
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
         }
-        textarea.form-control {
-            resize: vertical;
+
+        .form-control::placeholder {
+            color: var(--placeholder);
         }
+
         .btn-submit {
             background: var(--btn-bg);
             border: none;
@@ -112,74 +154,85 @@
             border-radius: 2rem;
             font-weight: 700;
             font-size: 1rem;
+            color: white;
+            transition: all 0.2s ease;
             width: 100%;
             margin-top: 2rem;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s;
         }
+
         .btn-submit:hover:not(:disabled) {
             background: var(--btn-hover);
             transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
         }
+
         .btn-submit:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
+
         .captcha-box {
-            background: var(--bg-card);
+            background: var(--captcha-bg);
             border-radius: 1.25rem;
             padding: 1.5rem;
             margin-top: 2rem;
             border: 1px solid var(--border-light);
             text-align: center;
         }
+
         .captcha-status {
             margin-top: 0.75rem;
             font-size: 0.8rem;
         }
-        .captcha-status.success { color: var(--success); }
-        .captcha-status.error { color: var(--error); }
+        .captcha-status.success { color: #22c55e; }
+        .captcha-status.error { color: #dc2626; }
         .captcha-status.warning { color: #f59e0b; }
-        
-        /* Menu lateral */
+
         .menu-corner {
             position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 1000;
+            top: 1.2rem;
+            left: 1.2rem;
+            z-index: 1050;
         }
+
         .menu-btn {
             background: var(--bg-card);
             border: 1px solid var(--border-light);
-            padding: 0.5rem 1.2rem;
+            padding: 0.6rem 1.4rem;
             border-radius: 2rem;
-            cursor: pointer;
             font-weight: 600;
+            font-size: 0.9rem;
             color: var(--text-primary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
             backdrop-filter: blur(4px);
-            transition: 0.2s;
         }
+
         .menu-btn:hover {
-            background: var(--accent);
-            color: white;
+            background: var(--accent-soft);
             border-color: var(--accent);
+            transform: scale(1.02);
         }
+
         .sidebar-menu {
             position: fixed;
             top: 0;
-            left: -280px;
-            width: 280px;
+            left: -320px;
+            width: 300px;
             height: 100%;
-            background: var(--bg-card);
-            z-index: 1001;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(20px);
+            box-shadow: 2rem 0 3rem rgba(0, 0, 0, 0.1);
+            z-index: 1060;
             transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             padding: 2rem 1.5rem;
             border-right: 1px solid var(--border-light);
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            gap: 1.5rem;
         }
+
         .sidebar-menu.open { left: 0; }
         .menu-overlay {
             position: fixed;
@@ -187,9 +240,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.3);
+            background: var(--overlay);
             backdrop-filter: blur(3px);
-            z-index: 1000;
+            z-index: 1055;
             visibility: hidden;
             opacity: 0;
             transition: 0.2s;
@@ -198,72 +251,71 @@
         .close-sidebar {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             align-self: flex-end;
             cursor: pointer;
-            color: var(--text-secondary);
+            color: var(--text-muted);
         }
         .menu-title {
             font-weight: 700;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
+            color: var(--text-primary);
             border-bottom: 2px solid var(--border-light);
             padding-bottom: 0.5rem;
         }
         .menu-item {
             padding: 0.7rem 0;
+            font-weight: 500;
+            color: var(--text-secondary);
             cursor: pointer;
+            transition: 0.15s;
             border-bottom: 1px solid var(--border-light);
-            font-weight: 500;
-            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .menu-item:hover {
-            color: var(--accent);
-            transform: translateX(5px);
-        }
+        .menu-item:hover { color: var(--accent); transform: translateX(6px); }
+        .external-link { margin-top: 0.5rem; }
         .external-btn {
-            display: block;
-            padding: 0.7rem;
-            text-align: center;
-            background: var(--bg-body);
-            border-radius: 1rem;
-            text-decoration: none;
-            color: var(--text-primary);
-            font-weight: 500;
+            background: var(--input-bg);
             border: 1px solid var(--border-light);
+            padding: 0.7rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            color: var(--text-primary);
             transition: 0.15s;
         }
-        .external-btn:hover {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
+        .external-btn:hover { background: var(--accent-soft); border-color: var(--accent); transform: translateX(4px); }
         .lang-row {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            gap: 12px;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border-light);
         }
         .lang-row button {
             flex: 1;
-            padding: 0.5rem;
-            border-radius: 2rem;
-            background: var(--bg-body);
+            background: var(--input-bg);
             border: 1px solid var(--border-light);
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .lang-row button:hover {
-            background: var(--accent);
-            color: white;
-        }
-        .theme-switch {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0.8rem;
-            background: var(--bg-body);
+            padding: 0.6rem;
             border-radius: 2rem;
-            margin-top: 0.5rem;
+            font-weight: 600;
+            transition: 0.15s;
+            color: var(--text-primary);
         }
+        .lang-row button:hover { background: var(--accent-soft); }
+        .theme-switch-inline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--input-bg);
+            padding: 0.7rem 1rem;
+            border-radius: 3rem;
+            border: 1px solid var(--border-light);
+        }
+        .theme-switch-inline span { font-size: 0.85rem; font-weight: 500; }
         .toggle-switch {
             width: 48px;
             height: 24px;
@@ -287,17 +339,16 @@
         .credits-footer {
             font-size: 0.7rem;
             text-align: center;
-            color: var(--text-secondary);
-            margin-top: auto;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
         }
-        /* Modal éxito */
         #successModal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(12px);
             display: none;
             justify-content: center;
@@ -306,29 +357,27 @@
         }
         .modal-card {
             background: var(--bg-card);
-            max-width: 400px;
+            max-width: 450px;
             width: 90%;
-            border-radius: 1.5rem;
+            border-radius: 1.75rem;
             padding: 2rem;
             text-align: center;
-            animation: fadeSlide 0.3s ease;
+            animation: fadeSlideUp 0.3s ease;
+            border: 1px solid var(--border-light);
         }
         .contact-email {
-            background: var(--bg-body);
+            background: var(--accent-soft);
             padding: 0.5rem;
             border-radius: 1rem;
-            margin: 1rem 0;
-            font-weight: 600;
-            color: var(--accent);
             font-family: monospace;
+            font-weight: 600;
+            margin: 1rem 0;
+            color: var(--accent);
         }
-        .row { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
-        .col-md-6 { flex: 1; min-width: 200px; }
-        .col-md-4 { flex: 1; min-width: 150px; }
-        .col-12 { width: 100%; }
         @media (max-width: 640px) {
             body { padding: 1rem; }
-            .row { flex-direction: column; gap: 0.8rem; }
+            .menu-corner { top: 0.8rem; left: 0.8rem; }
+            .menu-btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -342,115 +391,49 @@
     <button class="close-sidebar" id="closeSidebarBtn">✕</button>
     <div class="menu-title" id="menuTitle">Menú</div>
     <div class="menu-item" id="backToRootItem">🏠 Back to Root</div>
-    <a href="https://quasvx.pages.dev" target="_blank" class="external-btn">⚡ Quasvx</a>
-    <div class="theme-switch">
-        <span id="themeLabel">🌙 Modo oscuro</span>
-        <div class="toggle-switch" id="themeToggle"></div>
-    </div>
-    <div class="lang-row">
-        <button id="langEsBtn">🇪🇸 ES</button>
-        <button id="langEnBtn">🇬🇧 EN</button>
-    </div>
-    <div class="credits-footer">Ranky Form • Staff Application</div>
+    <div class="external-link"><a href="https://quasvx.pages.dev" target="_blank" class="external-btn">⚡ Quasvx</a></div>
+    <div class="theme-switch-inline"><span id="themeLabel">🌙 Modo oscuro</span><div class="toggle-switch" id="themeToggle"></div></div>
+    <div class="lang-row"><button id="langEsBtn">🇪🇸 ES</button><button id="langEnBtn">🇬🇧 EN</button></div>
+    <div class="credits-footer" id="footerCredits">Ranky Form • Staff Application</div>
 </div>
 <div class="menu-overlay" id="menuOverlay"></div>
 
-<div class="main-card">
-    <div class="hero-section">
-        <h1 id="title">Ranky Form</h1>
-        <p id="subtitle">Staff Application 2026</p>
-    </div>
-    <div class="p-4">
-        <form id="appForm">
-            <!-- Sección 1 -->
-            <div class="section-label" id="sec1">📋 01. Datos personales</div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label class="form-label" id="lDiscord">Discord *</label>
-                    <input type="text" id="discord" class="form-control" placeholder="usuario#0000" required>
+<div class="container">
+    <div class="main-card mx-auto" style="max-width: 1000px;">
+        <div class="hero-section"><h1 id="title">Ranky Form</h1><p id="subtitle">Staff Application 2026</p></div>
+        <div class="p-4 p-md-5">
+            <form id="applicationForm">
+                <div class="section-label" id="sec1">📋 01. Datos personales</div>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6"><label class="form-label" id="lDiscord">Discord *</label><input type="text" id="discord" class="form-control" placeholder="usuario#0000" required></div>
+                    <div class="col-md-6"><label class="form-label" id="lEmail">Correo electrónico *</label><input type="email" id="email" class="form-control" placeholder="contacto@ejemplo.com" required></div>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label" id="lEmail">Correo electrónico *</label>
-                    <input type="email" id="email" class="form-control" placeholder="tu@email.com" required>
+                <div class="section-label" id="sec2">🛠️ 02. Perfil profesional</div>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6"><label class="form-label" id="lRole">Rol principal *</label><select id="role" class="form-select" required><option value="" disabled selected id="optSelect">Seleccionar</option><option value="Coder" id="optCoder">Desarrollador/a</option><option value="Artist" id="optArtist">Artista gráfico</option><option value="Musician" id="optMusic">Compositor/a</option><option value="Charter" id="optChart">Charter</option></select></div>
+                    <div class="col-md-6"><label class="form-label" id="lTools">Herramientas principales *</label><input type="text" id="software" class="form-control" placeholder="Ej: Figma, Unity, FL Studio" required></div>
+                    <div class="col-md-4"><label class="form-label" id="lAge">Edad *</label><input type="number" id="age" class="form-control" min="13" required></div>
+                    <div class="col-md-4"><label class="form-label" id="lHours">Horas semanales *</label><input type="number" id="hours" class="form-control" required></div>
+                    <div class="col-md-4"><label class="form-label" id="lSkill">Nivel (0-100) *</label><input type="number" id="skill" class="form-control" min="0" max="100" required></div>
                 </div>
-            </div>
-
-            <!-- Sección 2 -->
-            <div class="section-label" id="sec2">🛠️ 02. Perfil profesional</div>
-            <div class="row">
-                <div class="col-md-6">
-                    <label class="form-label" id="lRole">Rol principal *</label>
-                    <select id="role" class="form-select" required>
-                        <option value="" disabled selected id="optSelect">Seleccionar</option>
-                        <option value="Coder" id="optCoder">Desarrollador/a</option>
-                        <option value="Artist" id="optArtist">Artista gráfico</option>
-                        <option value="Musician" id="optMusic">Compositor/a</option>
-                        <option value="Charter" id="optChart">Charter</option>
-                    </select>
+                <div class="section-label" id="sec3">✨ 03. Motivación y experiencia</div>
+                <div class="row g-4">
+                    <div class="col-12"><label class="form-label" id="lPortfolio">Portafolio / GitHub / GameBanana *</label><input type="text" id="portfolio" class="form-control" placeholder="https://github.com/tuusuario o gamebanana.com/member/..." required></div>
+                    <div class="col-12"><label class="form-label" id="lExperience">Experiencia previa *</label><textarea id="experience" class="form-control" rows="2" required></textarea></div>
+                    <div class="col-12"><label class="form-label" id="lMotivation">¿Por qué quieres unirte? *</label><textarea id="motivation" class="form-control" rows="3" required></textarea></div>
+                    <div class="col-12"><label class="form-label" id="lConflict">Ejemplo de resolución de conflictos *</label><textarea id="conflict" class="form-control" rows="2" required></textarea></div>
+                    <div class="col-12"><label class="form-label" id="lFuture">Meta a 1 año *</label><textarea id="future" class="form-control" rows="2" required></textarea></div>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label" id="lTools">Herramientas principales *</label>
-                    <input type="text" id="software" class="form-control" placeholder="Ej: Photoshop, Unity, FL Studio" required>
+                <div class="captcha-box">
+                    <label class="form-label mb-3" id="verifyLabel">🔐 Verificación de seguridad</label>
+                    <div id="turnstileContainer" class="d-flex justify-content-center"></div>
+                    <div id="recaptchaContainer" style="display:none" class="d-flex justify-content-center"></div>
+                    <div id="captchaStatus" class="captcha-status"></div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <label class="form-label" id="lAge">Edad *</label>
-                    <input type="number" id="age" class="form-control" min="13" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" id="lHours">Horas semanales *</label>
-                    <input type="number" id="hours" class="form-control" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" id="lSkill">Nivel (0-100) *</label>
-                    <input type="number" id="skill" class="form-control" min="0" max="100" required>
-                </div>
-            </div>
-
-            <!-- Sección 3 -->
-            <div class="section-label" id="sec3">✨ 03. Motivación y experiencia</div>
-            <div class="row">
-                <div class="col-12">
-                    <label class="form-label" id="lPortfolio">Portafolio / GitHub *</label>
-                    <input type="url" id="portfolio" class="form-control" placeholder="https://github.com/tuusuario" required>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <label class="form-label" id="lExperience">Experiencia previa *</label>
-                    <textarea id="experience" class="form-control" rows="2" placeholder="Cuéntanos tu experiencia relevante..." required></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <label class="form-label" id="lMotivation">¿Por qué quieres unirte a Ranky? *</label>
-                    <textarea id="motivation" class="form-control" rows="3" placeholder="Tu motivación, tus metas, qué puedes aportar..." required></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <label class="form-label" id="lConflict">Ejemplo de resolución de conflictos *</label>
-                    <textarea id="conflict" class="form-control" rows="2" placeholder="Describe cómo manejas desacuerdos o problemas en equipo..." required></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <label class="form-label" id="lFuture">Meta a 1 año *</label>
-                    <textarea id="future" class="form-control" rows="2" placeholder="¿Dónde te ves en un año dentro del proyecto?" required></textarea>
-                </div>
-            </div>
-
-            <!-- Captcha -->
-            <div class="captcha-box">
-                <label class="form-label" id="verifyLabel">🔐 Verificación de seguridad</label>
-                <div id="turnstileContainer" class="d-flex justify-content-center"></div>
-                <div id="recaptchaContainer" style="display:none" class="d-flex justify-content-center"></div>
-                <div id="captchaStatus" class="captcha-status"></div>
-            </div>
-            <div id="securityAlert" style="color:var(--error); margin-top:1rem; display:none; text-align:center; font-size:0.85rem;"></div>
-            <button type="submit" class="btn-submit" id="submitBtn" disabled>📤 Enviar solicitud</button>
-        </form>
+                <div id="securityAlert" style="color:#dc2626; font-size:0.85rem; margin-top:1rem; display:none; text-align:center;"></div>
+                <button type="submit" class="btn-submit" id="submitBtn" disabled>📤 Enviar solicitud</button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -459,345 +442,132 @@
         <div style="font-size:3rem;">✅</div>
         <h3 id="modalTitle">Solicitud enviada</h3>
         <div id="modalMessage"></div>
-        <button onclick="closeModal()" class="btn-submit" style="margin-top:1rem;">Cerrar</button>
+        <button onclick="closeSuccessModal()" class="btn-submit" style="margin-top:1rem;">Cerrar</button>
     </div>
 </div>
 
 <script>
-    // --- Cookies ---
-    function setCookie(name, value, days = 365) {
-        let expires = "";
-        if (days) { let d = new Date(); d.setTime(d.getTime() + days*24*60*60*1000); expires = "; expires=" + d.toUTCString(); }
-        document.cookie = name + "=" + (value || "") + expires + "; path=/";
-    }
-    function getCookie(name) {
-        let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        return match ? match[2] : null;
-    }
-
-    // --- Bloqueo temporal (10 minutos) ---
-    function isBlocked() {
-        let blocked = getCookie('ranky_blocked');
-        if (blocked && parseInt(blocked) > Date.now()) return true;
-        return false;
-    }
-    function setBlocked() {
-        setCookie('ranky_blocked', Date.now() + 600000, 0.01);
-    }
-
-    // --- Captcha: 3 intentos Turnstile -> reCAPTCHA -> bloqueo ---
-    let turnstileAttempts = 0;
-    let turnstileWidget = null;
-    let currentStage = 'turnstile'; // 'turnstile', 'recaptcha'
-    let recaptchaWidget = null;
-    let captchaToken = null;
-
-    const TURNSTILE_KEY = "1x00000000000000000000AA";  // test key (funciona local)
-    const RECAPTCHA_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"; // test key
-
+    // Cookies
+    function setCookie(name, value, days = 365) { let expires = ""; if (days) { const d = new Date(); d.setTime(d.getTime() + days*24*60*60*1000); expires = "; expires=" + d.toUTCString(); } document.cookie = name + "=" + (value || "") + expires + "; path=/"; }
+    function getCookie(name) { const m = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)')); return m ? m[2] : null; }
+    
+    // Bloqueo temporal (10 minutos)
+    function isBlocked() { const b = getCookie('ranky_blocked'); return b && parseInt(b) > Date.now(); }
+    function setBlocked() { setCookie('ranky_blocked', Date.now() + 600000, 0.01); }
+    
+    // Captcha: 3 intentos Turnstile -> reCAPTCHA
+    let turnstileAttempts = 0, turnstileWidget = null, currentStage = 'turnstile', recaptchaWidget = null, captchaToken = null;
+    let turnstileSitekey = "", recaptchaSitekey = "";
+    
     function updateStatus(msg, type) {
-        let statusDiv = document.getElementById('captchaStatus');
-        statusDiv.innerHTML = msg;
-        statusDiv.className = 'captcha-status ' + type;
-        setTimeout(() => {
-            if (statusDiv.innerHTML === msg) statusDiv.innerHTML = '';
-        }, 5000);
+        const div = document.getElementById('captchaStatus');
+        div.innerHTML = msg;
+        div.className = 'captcha-status ' + type;
+        setTimeout(() => { if (div.innerHTML === msg) div.innerHTML = ''; }, 5000);
     }
-
-    function turnstileSuccess(token) {
-        captchaToken = token;
-        turnstileAttempts = 0;
-        updateStatus('✅ Verificación exitosa', 'success');
-        document.getElementById('submitBtn').disabled = false;
-    }
-
-    function turnstileError() {
-        turnstileAttempts++;
-        updateStatus(`⚠️ Error en Turnstile (intento ${turnstileAttempts}/3)`, 'error');
-        if (turnstileAttempts >= 3) {
-            updateStatus('🔄 Cambiando a reCAPTCHA...', 'warning');
-            switchToRecaptcha();
-        } else {
-            if (turnstileWidget) turnstile.reset(turnstileWidget);
-            document.getElementById('submitBtn').disabled = true;
-            captchaToken = null;
-        }
-    }
-
-    function renderTurnstile() {
-        if (turnstileWidget) { try { turnstile.reset(turnstileWidget); } catch(e) {} }
-        turnstileWidget = turnstile.render('#turnstileContainer', {
-            sitekey: TURNSTILE_KEY,
-            callback: turnstileSuccess,
-            'error-callback': turnstileError,
-            'expired-callback': () => {
-                captchaToken = null;
-                document.getElementById('submitBtn').disabled = true;
-                updateStatus('Captcha expirado, resuelve de nuevo', 'error');
-            }
-        });
-    }
-
-    function recaptchaSuccess(token) {
-        captchaToken = token;
-        updateStatus('✅ Verificación exitosa (reCAPTCHA)', 'success');
-        document.getElementById('submitBtn').disabled = false;
-    }
-
-    function recaptchaError() {
-        updateStatus('❌ reCAPTCHA falló. Has sido bloqueado por 10 minutos.', 'error');
-        setBlocked();
-        document.getElementById('submitBtn').disabled = true;
-        document.getElementById('turnstileContainer').style.display = 'none';
-        document.getElementById('recaptchaContainer').style.display = 'none';
-    }
-
-    function switchToRecaptcha() {
-        if (currentStage === 'recaptcha') return;
-        currentStage = 'recaptcha';
-        document.getElementById('turnstileContainer').style.display = 'none';
-        document.getElementById('recaptchaContainer').style.display = 'flex';
-        try {
-            if (recaptchaWidget) grecaptcha.reset(recaptchaWidget);
-            recaptchaWidget = grecaptcha.render('recaptchaContainer', {
-                sitekey: RECAPTCHA_KEY,
-                callback: recaptchaSuccess,
-                'expired-callback': () => {
-                    captchaToken = null;
-                    document.getElementById('submitBtn').disabled = true;
-                    updateStatus('reCAPTCHA expirado', 'error');
-                },
-                'error-callback': recaptchaError
-            });
-        } catch(e) {
-            recaptchaError();
-        }
-    }
-
-    function initCaptcha() {
-        if (isBlocked()) {
-            updateStatus('🚫 Acceso bloqueado por 10 minutos. Intenta más tarde.', 'error');
-            document.getElementById('submitBtn').disabled = true;
-            return;
-        }
-        currentStage = 'turnstile';
-        turnstileAttempts = 0;
-        document.getElementById('turnstileContainer').style.display = 'flex';
-        document.getElementById('recaptchaContainer').style.display = 'none';
-        renderTurnstile();
-    }
-
-    // --- Tema claro/oscuro ---
-    function initTheme() {
-        let saved = getCookie('theme');
-        let dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (saved === 'dark' || (!saved && dark)) document.body.classList.add('dark');
-        else document.body.classList.remove('dark');
-    }
-    function toggleTheme() {
-        if (document.body.classList.contains('dark')) {
-            document.body.classList.remove('dark');
-            setCookie('theme', 'light');
-        } else {
-            document.body.classList.add('dark');
-            setCookie('theme', 'dark');
-        }
-    }
+    
+    function turnstileSuccess(token) { captchaToken = token; turnstileAttempts = 0; updateStatus('✅ Verificación exitosa', 'success'); document.getElementById('submitBtn').disabled = false; }
+    function turnstileError() { turnstileAttempts++; updateStatus(`⚠️ Error (intento ${turnstileAttempts}/3)`, 'error'); if (turnstileAttempts >= 3) { updateStatus('🔄 Cambiando a reCAPTCHA...', 'warning'); switchToRecaptcha(); } else { if (turnstileWidget) turnstile.reset(turnstileWidget); document.getElementById('submitBtn').disabled = true; captchaToken = null; } }
+    function renderTurnstile() { if (turnstileWidget) { try { turnstile.reset(turnstileWidget); } catch(e) {} } turnstileWidget = turnstile.render('#turnstileContainer', { sitekey: turnstileSitekey, callback: turnstileSuccess, 'error-callback': turnstileError, 'expired-callback': () => { captchaToken = null; document.getElementById('submitBtn').disabled = true; updateStatus('Captcha expirado', 'error'); } }); }
+    function recaptchaSuccess(token) { captchaToken = token; updateStatus('✅ Verificación exitosa (reCAPTCHA)', 'success'); document.getElementById('submitBtn').disabled = false; }
+    function recaptchaError() { updateStatus('❌ reCAPTCHA falló. Bloqueado 10 min', 'error'); setBlocked(); document.getElementById('submitBtn').disabled = true; document.getElementById('turnstileContainer').style.display = 'none'; document.getElementById('recaptchaContainer').style.display = 'none'; }
+    function switchToRecaptcha() { if (currentStage === 'recaptcha') return; currentStage = 'recaptcha'; document.getElementById('turnstileContainer').style.display = 'none'; document.getElementById('recaptchaContainer').style.display = 'flex'; try { if (recaptchaWidget) grecaptcha.reset(recaptchaWidget); recaptchaWidget = grecaptcha.render('recaptchaContainer', { sitekey: recaptchaSitekey, callback: recaptchaSuccess, 'expired-callback': () => { captchaToken = null; document.getElementById('submitBtn').disabled = true; }, 'error-callback': recaptchaError }); } catch(e) { recaptchaError(); } }
+    function initCaptcha() { if (isBlocked()) { updateStatus('🚫 Bloqueado 10 min', 'error'); document.getElementById('submitBtn').disabled = true; return; } currentStage = 'turnstile'; turnstileAttempts = 0; document.getElementById('turnstileContainer').style.display = 'flex'; document.getElementById('recaptchaContainer').style.display = 'none'; renderTurnstile(); }
+    
+    // Cargar config.json
+    async function loadConfig() { try { const res = await fetch('./config.json'); const cfg = await res.json(); turnstileSitekey = cfg.sitekey; recaptchaSitekey = cfg.recaptchaSitekey; initCaptcha(); } catch(e) { console.error('Error loading config:', e); turnstileSitekey = "0x4AAAAAAC1hHPxy_vFvCggo"; recaptchaSitekey = "6Le0PrssAAAAACIFcVxZgEAqc7wHL1l5T4slFRqk"; initCaptcha(); } }
+    
+    // Tema
+    function initTheme() { const saved = getCookie('ranky_theme'); const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches; const theme = saved || (prefers ? 'dark' : 'light'); if (theme === 'dark') document.body.classList.add('dark'); else document.body.classList.remove('dark'); }
+    function toggleTheme() { if (document.body.classList.contains('dark')) { document.body.classList.remove('dark'); setCookie('ranky_theme', 'light'); } else { document.body.classList.add('dark'); setCookie('ranky_theme', 'dark'); } }
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-    // --- Traducciones (completas) ---
+    
+    // Traducciones
     const texts = {
-        en: {
-            menuTitle: "Menu", backToRoot: "🏠 Back to Root", themeLabel: "🌙 Dark mode",
-            title: "Ranky Form", subtitle: "Staff Application 2026",
-            sec1: "📋 01. Personal info", sec2: "🛠️ 02. Professional profile", sec3: "✨ 03. Motivation & experience",
-            lDiscord: "Discord *", lEmail: "Email *", lRole: "Main role *", optSelect: "Select",
-            optCoder: "Developer", optArtist: "Graphic Artist", optMusic: "Composer", optChart: "Charter",
-            lTools: "Main tools *", lAge: "Age *", lHours: "Weekly hours *", lSkill: "Skill level (0-100) *",
-            lPortfolio: "Portfolio / GitHub *", lExperience: "Previous experience *", lMotivation: "Why join Ranky? *",
-            lConflict: "Conflict resolution example *", lFuture: "1-year goal *", verifyLabel: "🔐 Verification",
-            submitBtn: "📤 Submit application", modalTitle: "Application sent",
-            modalTextValid: "We will contact you from:", modalTextInvalid: "⚠️ Invalid email address. We cannot contact you.",
-            contactEmail: "quasvx@outlook.es",
-            errors: { mouse: "⚠️ Move your mouse or interact with the page first.", speed: "⚠️ Form sent too quickly. Please wait a few seconds.", paste: "⚠️ Excessive copy-paste detected. Type naturally." }
-        },
-        es: {
-            menuTitle: "Menú", backToRoot: "🏠 Volver al Inicio", themeLabel: "🌙 Modo oscuro",
-            title: "Ranky Form", subtitle: "Solicitud de Staff 2026",
-            sec1: "📋 01. Datos personales", sec2: "🛠️ 02. Perfil profesional", sec3: "✨ 03. Motivación y experiencia",
-            lDiscord: "Discord *", lEmail: "Correo electrónico *", lRole: "Rol principal *", optSelect: "Seleccionar",
-            optCoder: "Desarrollador/a", optArtist: "Artista gráfico", optMusic: "Compositor/a", optChart: "Charter",
-            lTools: "Herramientas principales *", lAge: "Edad *", lHours: "Horas semanales *", lSkill: "Nivel (0-100) *",
-            lPortfolio: "Portafolio / GitHub *", lExperience: "Experiencia previa *", lMotivation: "¿Por qué unirte a Ranky? *",
-            lConflict: "Ejemplo de resolución de conflictos *", lFuture: "Meta a 1 año *", verifyLabel: "🔐 Verificación",
-            submitBtn: "📤 Enviar solicitud", modalTitle: "Solicitud enviada",
-            modalTextValid: "Te contactaremos en los próximos días desde:", modalTextInvalid: "⚠️ No ingresaste un email válido. No podemos contactarte.",
-            contactEmail: "quasvx@outlook.es",
-            errors: { mouse: "⚠️ Mueve el ratón o interactúa con la página primero.", speed: "⚠️ Envío demasiado rápido. Espera unos segundos.", paste: "⚠️ Evita copiar y pegar en exceso. Escribe normalmente." }
-        }
+        en: { menuTitle: "Menu", backToRoot: "🏠 Back to Root", themeLabel: "🌙 Dark mode", footer: "Ranky Form • Staff Application", title: "Ranky Form", subtitle: "Staff Application 2026", sec1: "📋 01. Personal info", sec2: "🛠️ 02. Professional profile", sec3: "✨ 03. Motivation & experience", lDiscord: "Discord *", lEmail: "Email *", lRole: "Main role *", optSelect: "Select", optCoder: "Developer", optArtist: "Graphic Artist", optMusic: "Composer", optChart: "Charter", lTools: "Main tools *", lAge: "Age *", lHours: "Weekly hours *", lSkill: "Skill level (0-100) *", lPortfolio: "Portfolio / GitHub / GameBanana *", lExperience: "Previous experience *", lMotivation: "Why join us? *", lConflict: "Conflict resolution *", lFuture: "1-year goal *", verifyLabel: "🔐 Security verification", submitBtn: "📤 Submit application", modalTitle: "Application sent", modalTextValid: "We will contact you from:", modalTextInvalid: "⚠️ Invalid email. We cannot contact you.", contactEmail: "quasvx@outlook.es", errors: { mouse: "Move your mouse first.", speed: "Too fast. Wait.", paste: "Avoid excessive pasting." } },
+        es: { menuTitle: "Menú", backToRoot: "🏠 Volver al Inicio", themeLabel: "🌙 Modo oscuro", footer: "Ranky Form • Solicitud de Staff", title: "Ranky Form", subtitle: "Solicitud de Staff 2026", sec1: "📋 01. Datos personales", sec2: "🛠️ 02. Perfil profesional", sec3: "✨ 03. Motivación y experiencia", lDiscord: "Discord *", lEmail: "Correo *", lRole: "Rol principal *", optSelect: "Seleccionar", optCoder: "Desarrollador/a", optArtist: "Artista gráfico", optMusic: "Compositor/a", optChart: "Charter", lTools: "Herramientas *", lAge: "Edad *", lHours: "Horas semanales *", lSkill: "Nivel (0-100) *", lPortfolio: "Portafolio / GitHub / GameBanana *", lExperience: "Experiencia previa *", lMotivation: "¿Por qué unirte? *", lConflict: "Resolver conflictos *", lFuture: "Meta a 1 año *", verifyLabel: "🔐 Verificación", submitBtn: "📤 Enviar solicitud", modalTitle: "Solicitud enviada", modalTextValid: "Te contactaremos desde:", modalTextInvalid: "⚠️ Email inválido. No podemos contactarte.", contactEmail: "quasvx@outlook.es", errors: { mouse: "Mueve el ratón primero.", speed: "Demasiado rápido. Espera.", paste: "Evita pegar en exceso." } }
     };
     let currentLang = 'es';
-    function applyLanguage(lang) {
-        currentLang = lang;
-        setCookie('lang', lang);
-        const t = texts[lang];
-        document.getElementById('menuTitle').innerText = t.menuTitle;
-        document.getElementById('backToRootItem').innerHTML = t.backToRoot;
-        document.getElementById('themeLabel').innerHTML = t.themeLabel;
-        document.getElementById('title').innerText = t.title;
-        document.getElementById('subtitle').innerText = t.subtitle;
-        document.getElementById('sec1').innerText = t.sec1;
-        document.getElementById('sec2').innerText = t.sec2;
-        document.getElementById('sec3').innerText = t.sec3;
-        document.getElementById('lDiscord').innerText = t.lDiscord;
-        document.getElementById('lEmail').innerText = t.lEmail;
-        document.getElementById('lRole').innerText = t.lRole;
-        document.getElementById('optSelect').innerText = t.optSelect;
-        document.getElementById('optCoder').innerText = t.optCoder;
-        document.getElementById('optArtist').innerText = t.optArtist;
-        document.getElementById('optMusic').innerText = t.optMusic;
-        document.getElementById('optChart').innerText = t.optChart;
-        document.getElementById('lTools').innerText = t.lTools;
-        document.getElementById('lAge').innerText = t.lAge;
-        document.getElementById('lHours').innerText = t.lHours;
-        document.getElementById('lSkill').innerText = t.lSkill;
-        document.getElementById('lPortfolio').innerText = t.lPortfolio;
-        document.getElementById('lExperience').innerText = t.lExperience;
-        document.getElementById('lMotivation').innerText = t.lMotivation;
-        document.getElementById('lConflict').innerText = t.lConflict;
-        document.getElementById('lFuture').innerText = t.lFuture;
-        document.getElementById('verifyLabel').innerHTML = t.verifyLabel;
-        document.getElementById('submitBtn').innerHTML = t.submitBtn;
-        document.getElementById('modalTitle').innerText = t.modalTitle;
-        document.getElementById('menuBtn').innerHTML = lang === 'es' ? '☰ Menú' : '☰ Menu';
-    }
-
-    // --- Menú lateral ---
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('menuOverlay');
-    function openMenu() { sidebar.classList.add('open'); overlay.classList.add('active'); }
-    function closeMenu() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
-    document.getElementById('menuBtn').addEventListener('click', openMenu);
-    document.getElementById('closeSidebarBtn').addEventListener('click', closeMenu);
-    overlay.addEventListener('click', closeMenu);
-    document.getElementById('backToRootItem').addEventListener('click', () => {
-        window.location.href = 'https://ranky.pages.dev';
-    });
-    document.getElementById('langEsBtn').addEventListener('click', () => applyLanguage('es'));
-    document.getElementById('langEnBtn').addEventListener('click', () => applyLanguage('en'));
-
-    // --- Envío del formulario ---
+    function applyLanguage(lang) { currentLang = lang; setCookie('ranky_lang', lang); const t = texts[lang]; document.getElementById('menuTitle').innerText = t.menuTitle; document.getElementById('backToRootItem').innerHTML = t.backToRoot; document.getElementById('themeLabel').innerHTML = t.themeLabel; document.getElementById('footerCredits').innerText = t.footer; document.getElementById('title').innerText = t.title; document.getElementById('subtitle').innerText = t.subtitle; document.getElementById('sec1').innerText = t.sec1; document.getElementById('sec2').innerText = t.sec2; document.getElementById('sec3').innerText = t.sec3; document.getElementById('lDiscord').innerText = t.lDiscord; document.getElementById('lEmail').innerText = t.lEmail; document.getElementById('lRole').innerText = t.lRole; document.getElementById('optSelect').innerText = t.optSelect; document.getElementById('optCoder').innerText = t.optCoder; document.getElementById('optArtist').innerText = t.optArtist; document.getElementById('optMusic').innerText = t.optMusic; document.getElementById('optChart').innerText = t.optChart; document.getElementById('lTools').innerText = t.lTools; document.getElementById('lAge').innerText = t.lAge; document.getElementById('lHours').innerText = t.lHours; document.getElementById('lSkill').innerText = t.lSkill; document.getElementById('lPortfolio').innerText = t.lPortfolio; document.getElementById('lExperience').innerText = t.lExperience; document.getElementById('lMotivation').innerText = t.lMotivation; document.getElementById('lConflict').innerText = t.lConflict; document.getElementById('lFuture').innerText = t.lFuture; document.getElementById('verifyLabel').innerText = t.verifyLabel; document.getElementById('submitBtn').innerHTML = t.submitBtn; document.getElementById('modalTitle').innerText = t.modalTitle; document.getElementById('menuBtn').innerHTML = lang === 'es' ? '☰ Menú' : '☰ Menu'; }
+    
+    // Menú lateral
+    const sidebar = document.getElementById('sidebar'), overlayMenu = document.getElementById('menuOverlay');
+    document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('open'); overlayMenu.classList.add('active'); };
+    document.getElementById('closeSidebarBtn').onclick = () => { sidebar.classList.remove('open'); overlayMenu.classList.remove('active'); };
+    overlayMenu.onclick = () => { sidebar.classList.remove('open'); overlayMenu.classList.remove('active'); };
+    document.getElementById('backToRootItem').onclick = () => { window.location.href = 'https://ranky.pages.dev'; };
+    document.getElementById('langEsBtn').onclick = () => applyLanguage('es');
+    document.getElementById('langEnBtn').onclick = () => applyLanguage('en');
+    
+    // Envío del formulario (sin validación de http en portfolio)
     let mouseMoves = 0, pasteCount = 0, startTime = Date.now();
     document.addEventListener('mousemove', () => mouseMoves++);
-    document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('paste', () => pasteCount++));
-
-    function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    function closeModal() {
-        document.getElementById('successModal').style.display = 'none';
-    }
-    window.closeModal = closeModal;
-
-    document.getElementById('appForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
+    document.querySelectorAll('input,textarea').forEach(el => el.addEventListener('paste', () => pasteCount++));
+    function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+    function closeSuccessModal() { document.getElementById('successModal').style.display = 'none'; }
+    window.closeSuccessModal = closeSuccessModal;
+    
+    document.getElementById('applicationForm').addEventListener('submit', async (e) => { 
+        e.preventDefault(); 
+        if (isBlocked()) { updateStatus('Bloqueado 10 min', 'error'); return; } 
+        const elapsed = (Date.now()-startTime)/1000, err = texts[currentLang].errors, alertDiv = document.getElementById('securityAlert'); 
+        if (mouseMoves < 5) { alertDiv.innerText = err.mouse; alertDiv.style.display='block'; setTimeout(()=>alertDiv.style.display='none',3000); return; } 
+        if (elapsed < 6) { alertDiv.innerText = err.speed; alertDiv.style.display='block'; setTimeout(()=>alertDiv.style.display='none',3000); return; } 
+        if (pasteCount > 4) { alertDiv.innerText = err.paste; alertDiv.style.display='block'; setTimeout(()=>alertDiv.style.display='none',3000); return; } 
+        if (!captchaToken) { alertDiv.innerText = "Completa el captcha."; alertDiv.style.display='block'; setTimeout(()=>alertDiv.style.display='none',3000); return; } 
         
-        if (isBlocked()) {
-            updateStatus('🚫 Bloqueado por 10 minutos. Espera.', 'error');
-            return;
-        }
-        
-        const elapsed = (Date.now() - startTime) / 1000;
-        const t = texts[currentLang];
-        const alertDiv = document.getElementById('securityAlert');
-        
-        if (mouseMoves < 3) {
-            alertDiv.innerText = t.errors.mouse;
-            alertDiv.style.display = 'block';
-            setTimeout(() => alertDiv.style.display = 'none', 3000);
-            return;
-        }
-        if (elapsed < 5) {
-            alertDiv.innerText = t.errors.speed;
-            alertDiv.style.display = 'block';
-            setTimeout(() => alertDiv.style.display = 'none', 3000);
-            return;
-        }
-        if (pasteCount > 5) {
-            alertDiv.innerText = t.errors.paste;
-            alertDiv.style.display = 'block';
-            setTimeout(() => alertDiv.style.display = 'none', 3000);
-            return;
-        }
-        if (!captchaToken) {
-            alertDiv.innerText = "Completa el captcha primero.";
-            alertDiv.style.display = 'block';
-            setTimeout(() => alertDiv.style.display = 'none', 3000);
-            return;
-        }
-        
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerText = "...";
-        
-        try {
-            const formData = {
-                discord: document.getElementById('discord').value,
-                email: document.getElementById('email').value,
-                role: document.getElementById('role').value,
-                software: document.getElementById('software').value,
-                age: document.getElementById('age').value,
-                hours: document.getElementById('hours').value,
-                skill: document.getElementById('skill').value,
-                portfolio: document.getElementById('portfolio').value,
-                experience: document.getElementById('experience').value,
-                motivation: document.getElementById('motivation').value,
-                conflict: document.getElementById('conflict').value,
-                future: document.getElementById('future').value,
-                lang: currentLang
-            };
-            
-            const res = await fetch('https://ranky-api.pages.dev/api/api', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type: 'form',
-                    turnstileToken: captchaToken,
-                    isFallback: (currentStage === 'recaptcha'),
-                    formData: formData
-                })
-            });
-            
-            const data = await res.json();
-            
-            if (data.success) {
-                const modalMsg = document.getElementById('modalMessage');
-                const userEmail = document.getElementById('email').value;
-                if (isValidEmail(userEmail)) {
-                    modalMsg.innerHTML = `<p>${t.modalTextValid}</p><div class="contact-email">${t.contactEmail}</div><p>✅ Hemos recibido: <strong>${userEmail}</strong></p>`;
-                } else {
-                    modalMsg.innerHTML = `<p>${t.modalTextInvalid}</p>`;
-                }
-                document.getElementById('successModal').style.display = 'flex';
-            } else {
-                alert("Error en el envío. Intenta de nuevo.");
-                if (data.blocked) setBlocked();
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Error de red. Revisa tu conexión.");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = texts[currentLang].submitBtn;
-        }
+        const userEmail = document.getElementById('email').value; 
+        const btn = document.getElementById('submitBtn'); 
+        btn.disabled = true; 
+        btn.innerText = "..."; 
+        try { 
+            const formData = { 
+                discord: document.getElementById('discord').value, 
+                email: userEmail, 
+                role: document.getElementById('role').value, 
+                software: document.getElementById('software').value, 
+                age: document.getElementById('age').value, 
+                hours: document.getElementById('hours').value, 
+                skill: document.getElementById('skill').value, 
+                portfolio: document.getElementById('portfolio').value, 
+                experience: document.getElementById('experience').value, 
+                motivation: document.getElementById('motivation').value, 
+                conflict: document.getElementById('conflict').value, 
+                future: document.getElementById('future').value, 
+                lang: currentLang 
+            }; 
+            const res = await fetch('https://ranky-api.pages.dev/api/api', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ type: 'form', turnstileToken: captchaToken, isFallback: currentStage === 'recaptcha', formData }) 
+            }); 
+            const data = await res.json(); 
+            if (data.success) { 
+                const t = texts[currentLang]; 
+                const modalMsg = document.getElementById('modalMessage'); 
+                if (isValidEmail(userEmail)) { 
+                    modalMsg.innerHTML = `<p>${t.modalTextValid}</p><div class="contact-email">${t.contactEmail}</div><p>✅ ${userEmail}</p>`; 
+                } else { 
+                    modalMsg.innerHTML = `<p>${t.modalTextInvalid}</p>`; 
+                } 
+                document.getElementById('successModal').style.display = 'flex'; 
+            } else { 
+                alert("Error en el envío."); 
+                if (data.blocked) setBlocked(); 
+            } 
+        } catch(e) { 
+            console.error(e); 
+            alert("Error de red."); 
+        } finally { 
+            btn.disabled = false; 
+            btn.innerText = texts[currentLang].submitBtn; 
+        } 
     });
-
-    // --- Inicialización ---
+    
     initTheme();
-    const savedLang = getCookie('lang');
+    const savedLang = getCookie('ranky_lang');
     applyLanguage(savedLang === 'en' ? 'en' : 'es');
-    initCaptcha();
+    loadConfig();
 </script>
 </body>
 </html>
