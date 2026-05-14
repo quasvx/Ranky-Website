@@ -292,7 +292,7 @@
             transform: translateX(6px);
         }
 
-        /* Botón externo: SOLO QUASVX (sin Pikapi) */
+        /* Botón externo: SOLO QUASVX */
         .external-link {
             margin-top: 0.5rem;
         }
@@ -386,7 +386,7 @@
             margin-top: 0.5rem;
         }
 
-        /* Modal de éxito con mensaje dinámico sobre el email */
+        /* Modal de éxito */
         #successModal {
             position: fixed;
             top: 0;
@@ -439,9 +439,10 @@
     <button class="close-sidebar" id="closeSidebarBtn">✕</button>
     <div class="menu-title" id="menuTitle">Menú</div>
     
-    <div class="menu-item" id="cleanUrlItem">🏠 Limpiar URL / Inicio</div>
+    <!-- Botón modificado: "Back to Root" que lleva a ranky.pages.dev -->
+    <div class="menu-item" id="backToRootItem">🏠 Back to Root</div>
     
-    <!-- SOLO QUASVX (sin Pikapi) -->
+    <!-- Solo Quasvx -->
     <div class="external-link">
         <a href="https://quasvx.pages.dev" target="_blank" rel="noopener noreferrer" class="external-btn" id="quasvxLink">⚡ Quasvx</a>
     </div>
@@ -509,7 +510,7 @@
         <div style="font-size: 3rem;">✅</div>
         <h3 style="font-weight: 700; margin: 1rem 0 0.5rem;" id="modalTitle">Solicitud enviada</h3>
         <div id="modalMessage" style="color: var(--text-secondary); margin: 1rem 0;">
-            <!-- Mensaje dinámico se inyecta aquí -->
+            <!-- Mensaje dinámico -->
         </div>
         <button onclick="closeSuccessModal()" class="btn-submit" style="margin-top: 1rem;">Cerrar</button>
     </div>
@@ -531,7 +532,7 @@
         return match ? match[2] : null;
     }
 
-    // ----- TEMA (claro/oscuro) -----
+    // ----- TEMA -----
     function initTheme() {
         const savedTheme = getCookie('ranky_theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -554,7 +555,7 @@
     // ----- TRADUCCIONES -----
     const texts = {
         en: {
-            menuTitle: "Menu", cleanUrl: "🏠 Clean URL / Home", themeLabel: "🌙 Dark mode",
+            menuTitle: "Menu", backToRoot: "🏠 Back to Root", themeLabel: "🌙 Dark mode",
             footer: "Ranky Form • Staff Application",
             title: "Ranky Form", subtitle: "Staff Application 2026",
             sec1: "📋 01. Personal info", sec2: "🛠️ 02. Professional profile", sec3: "✨ 03. Motivation & experience",
@@ -570,7 +571,7 @@
             errors: { mouse: "⚠️ Move your mouse or interact with the page.", speed: "⚠️ Form sent too quickly. Please wait.", paste: "⚠️ Avoid excessive copy-paste." }
         },
         es: {
-            menuTitle: "Menú", cleanUrl: "🏠 Limpiar URL / Inicio", themeLabel: "🌙 Modo oscuro",
+            menuTitle: "Menú", backToRoot: "🏠 Volver al Inicio", themeLabel: "🌙 Modo oscuro",
             footer: "Ranky Form • Solicitud de Staff",
             title: "Ranky Form", subtitle: "Solicitud de Staff 2026",
             sec1: "📋 01. Datos personales", sec2: "🛠️ 02. Perfil profesional", sec3: "✨ 03. Motivación y experiencia",
@@ -592,7 +593,7 @@
         setCookie('ranky_lang', lang, 365);
         const t = texts[lang];
         document.getElementById('menuTitle').innerText = t.menuTitle;
-        document.getElementById('cleanUrlItem').innerHTML = t.cleanUrl;
+        document.getElementById('backToRootItem').innerHTML = t.backToRoot;
         document.getElementById('themeLabel').innerHTML = t.themeLabel;
         document.getElementById('footerCredits').innerText = t.footer;
         document.getElementById('title').innerText = t.title;
@@ -623,7 +624,7 @@
         document.getElementById('menuBtn').innerText = lang === 'es' ? '☰ Menú' : '☰ Menu';
     }
 
-    // --- Menú lateral y limpiar URL ---
+    // --- Menú lateral y BACK TO ROOT (redirige a ranky.pages.dev) ---
     const sidebar = document.getElementById('sidebar');
     const overlayMenu = document.getElementById('menuOverlay');
     function openMenu() { sidebar.classList.add('open'); overlayMenu.classList.add('active'); }
@@ -631,15 +632,10 @@
     document.getElementById('menuBtn').addEventListener('click', openMenu);
     document.getElementById('closeSidebarBtn').addEventListener('click', closeMenu);
     overlayMenu.addEventListener('click', closeMenu);
-    document.getElementById('cleanUrlItem').addEventListener('click', () => {
-        const cleanUrl = window.location.origin + window.location.pathname;
-        window.history.replaceState({}, document.title, cleanUrl);
-        closeMenu();
-        const alertDiv = document.getElementById('securityAlert');
-        alertDiv.innerText = "✓ URL limpiada";
-        alertDiv.style.color = "#10b981";
-        alertDiv.style.display = "block";
-        setTimeout(() => alertDiv.style.display = "none", 1800);
+    
+    // Botón "Back to Root" - redirige a ranky.pages.dev
+    document.getElementById('backToRootItem').addEventListener('click', () => {
+        window.location.href = 'https://ranky.pages.dev';
     });
 
     // --- Captcha y envío ---
